@@ -31,3 +31,51 @@ def get_model(model_name: str, num_classes: int = 10):
     if model_name.upper() == "CNN":
         return SmallCNN(num_classes=num_classes)
     raise ValueError(f"Unknown model_name: {model_name}")
+
+import torch
+import torch.nn as nn
+
+class AssignmentCNN(nn.Module):
+    """
+    Input: 64x64x3
+    Conv(3->16, 3x3, s=1, p=1) + ReLU
+    MaxPool(2x2, s=2)
+    Conv(16->32, 3x3, s=1, p=1) + ReLU
+    MaxPool(2x2, s=2)
+    Flatten
+    FC(?, 100) + ReLU
+    FC(100, 10)
+    """
+    def __init__(self, num_classes: int = 10):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),   # 64 -> 32
+
+            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),   # 32 -> 16
+        )
+        # 经过两次 2x2 池化后，空间从 64 -> 16，通道 32，所以展平维度 32*16*16=8192
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(32 * 16 * 16, 100),
+            nn.ReLU(inplace=True),
+            nn.Linear(100, num_classes),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.classifier(x)
+        return x
+
+def get_model(name: str, num_classes: int = 10):
+    name = name.lower()
+    if name in ["assignmentcnn", "assignment_cnn", "cnn64"]:
+        return AssignmentCNN(num_classes=num_classes)
+    # 你原来已有的分支...
+    # if name == "cnn": return 原先模型
+    # else:
+    return AssignmentCNN(num_classes=num_classes)
+
