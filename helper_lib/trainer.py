@@ -53,3 +53,4 @@ def train_model(model, epochs=8, lr=1e-3, device="cpu", out_dir="./artifacts"):
         f.write("\n".join(labels))
 
     print(f"Best val_acc={best_acc:.3f}. Weights saved to {out_dir}/model.pt")
+    
