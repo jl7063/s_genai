@@ -1,0 +1,17 @@
+[project]
+name = "s_genai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn>=0.30",
+  "numpy>=1.26,<2.4",
+  "pillow>=10.0,<11",
+  # 加入 PyTorch 相关（macOS 直接用 PyPI 轮子）
+  "torch==2.3.*",
+  "torchvision==0.18.*",
+  "python-multipart>=0.0.9",
+]
