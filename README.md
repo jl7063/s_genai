@@ -18,3 +18,11 @@ docker build --platform=linux/amd64 -t cnn-api .
 docker run --rm -p 8000:80 cnn-api
 # docs: http://127.0.0.1:8000/docs
 
+## Module 6 Assignment – DCGAN on MNIST + FastAPI Endpoint
+
+- **Part 1**: Implemented DCGAN for MNIST in `helper_lib/model.py` (Generator + Discriminator), trainer loop in `helper_lib/trainer.py`, and sampling util in `helper_lib/generator.py`.
+- **Part 2**: Trained on MNIST (`train_gan_mnist.py`) and added `/generate_gan` endpoint in `app/main.py`.  
+  - Trained weights saved to `artifacts_gan/G.pt` and copied to `artifacts/gan_generator.pt` for the API.
+  - Run: `uv run uvicorn app.main:app --reload` and test at `http://127.0.0.1:8000/docs`.
+- **Evidence**: See sample grids in `artifacts_gan/epoch_*.png` and `gan_grid.png` (generated via API).
+- **Env**: `uv pip install fastapi "uvicorn[standard]" pydantic pillow torchvision matplotlib tqdm`.
