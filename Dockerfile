@@ -1,25 +1,22 @@
+# Dockerfile
 FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
-
+# 安装基础依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    libjpeg62-turbo-dev \
-    zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir "fastapi[standard]" uvicorn pillow numpy \
- && pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision
+# 复制依赖文件并安装
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app /app/app
-COPY helper_lib /app/helper_lib
-COPY artifacts/model.pt /app/artifacts/model.pt
-COPY artifacts/labels.txt /app/artifacts/labels.txt
+# 复制项目全部代码
+COPY . .
 
-EXPOSE 80
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+# 暴露端口
+EXPOSE 8000
 
+# 启动 FastAPI 服务器（就是你这次作业要交的 API）
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
