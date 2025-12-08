@@ -1,9 +1,17 @@
 fastapi
+
 uvicorn[standard]
+
 torch
+
 torchvision
+
 numpy
+
 pillow
+
 python-multipart
+
 transformers
+
 accelerate
